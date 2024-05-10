@@ -9,6 +9,5 @@ run:
 	${BINARY_PATH}/${BINARY_NAME}
 
 clean:
-	go mod tidy
 	go clean
 	rm ${BINARY_PATH}/${BINARY_NAME}
