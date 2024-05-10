@@ -11,3 +11,6 @@ run:
 clean:
 	go clean
 	rm ${BINARY_PATH}/${BINARY_NAME}
+
+migrate-up:
+	migrate -path=./migrations -database=${GREENLIGHT_DB_DSN} up
