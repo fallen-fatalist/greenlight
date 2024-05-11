@@ -102,7 +102,7 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 		Title   *string       `json: "title"`
 		Year    *int32        `json: "year"`
 		Runtime *data.Runtime `json: "runtime"`
-		Genres  []string     `json: "genres"`
+		Genres  []string      `json: "genres"`
 	}
 
 	err = app.readJSON(w, r, &input)
@@ -110,7 +110,7 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 		app.badRequestResponse(w, r, err)
 		return
 	}
-	
+
 	if input.Title != nil {
 		movie.Title = *input.Title
 	}
@@ -124,7 +124,6 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 		movie.Genres = input.Genres
 	}
 
-
 	v := validator.New()
 
 	if data.ValidateMovie(v, movie); !v.Valid() {
@@ -134,7 +133,12 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 
 	err = app.models.Movies.Update(movie)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		switch {
+		case errors.Is(err, data.ErrEditConflict):
+			app.editConflictResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
 		return
 	}
 
@@ -159,10 +163,10 @@ func (app *application) deleteMovieHandler(w http.ResponseWriter, r *http.Reques
 		default:
 			app.serverErrorResponse(w, r, err)
 		}
-		return 
+		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"message" : "movie successfully deleted"}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "movie successfully deleted"}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
