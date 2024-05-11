@@ -82,7 +82,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 			return nil, err
 		}
 	}
-	return nil, nil
+	return &movie, nil
 }
 
 func (m MovieModel) Update(movie *Movie) error {
