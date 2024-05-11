@@ -91,7 +91,7 @@ func (m MovieModel) Update(movie *Movie) error {
 		SET title = $1, year = $2, runtime = $3, genres = $4, version = version + 1
 		WHERE id = $5
 		RETURNING version`
-		
+
 	args := []interface{}{
 		movie.Title,
 		movie.Year,
@@ -108,9 +108,9 @@ func (m MovieModel) Delete(id int64) error {
 	}
 
 	query := `
-		DELETE FROM books
+		DELETE FROM movies
 		WHERE id = $1`
-		
+
 	result, err := m.DB.Exec(query, id)
 	if err != nil {
 		return err
