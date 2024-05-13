@@ -20,6 +20,10 @@ type Movie struct {
 	Version   int32     `json:"version"`
 }
 
+func (m1 Movie) Equal(m2 Movie) bool {
+	return m1.Title == m2.Title && m1.Year == m2.Year && m1.Runtime == m2.Runtime
+}
+
 func ValidateMovie(v *validator.Validator, movie *Movie) {
 	v.Check(movie.Title != "", "title", "must be provided")
 	v.Check(len(movie.Title) <= 500, "title", "must not be more than 500 bytes long")
@@ -151,4 +155,47 @@ func (m MovieModel) Delete(id int64) error {
 	}
 
 	return nil
+}
+
+type MockMovieModel struct{}
+
+var mockMovie = Movie{
+	ID:        1,
+	CreatedAt: time.Now(),
+	Title:     "Spider man",
+	Year:      2002,
+	Runtime:   121,
+	Genres:    []string{"sci-fi", "action", "adventure"},
+	Version:   1,
+}
+
+func (m MockMovieModel) Insert(movie *Movie) error {
+	return nil
+}
+
+func (m MockMovieModel) Get(id int64) (*Movie, error) {
+	switch id {
+	case 1:
+		return &mockMovie, nil
+	default:
+		return &Movie{}, ErrRecordNotFound
+	}
+}
+
+func (m MockMovieModel) Update(movie *Movie) error {
+	switch movie.ID {
+	case 1:
+		return nil
+	default:
+		return ErrRecordNotFound
+	}
+}
+
+func (m MockMovieModel) Delete(id int64) error {
+	switch id {
+	case 1:
+		return nil
+	default:
+		return ErrRecordNotFound
+	}
 }
