@@ -18,7 +18,8 @@ INSERT INTO movies (title, year, runtime, genres) VALUES (
     'Spider man',
     2002,
     102,
-    '{"sci-fi", "action", "adventure"}'
+    -- adventure genre should be added
+    '{"sci-fi", "action"}'
 );
 
 INSERT INTO movies (title, year, runtime, genres) VALUES (
