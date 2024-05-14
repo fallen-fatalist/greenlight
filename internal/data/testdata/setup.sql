@@ -20,3 +20,19 @@ INSERT INTO movies (title, year, runtime, genres) VALUES (
     102,
     {'sci-fi', 'action', 'adventure'}
 );
+
+INSERT INTO movies (title, year, runtime, genres) VALUES (
+    'Attack of the titans',
+    2013,
+    1,
+    -- should be added "anime" genre
+    {'adventure', 'action', 'fantasy', "drama", "cartoon"}
+)
+
+INSERT INTO movies (title, year, runtime, genres) VALUES (
+    'Grimgar of the fantasy and ash',
+    -- should be 2016 year
+    2015,
+    1,
+    {'anime', 'adventure', 'action', 'fantasy', "cartoon"}
+)
