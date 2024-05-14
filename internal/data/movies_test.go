@@ -9,7 +9,7 @@ import (
 
 func TestMoviesInsert(t *testing.T) {
 
-	type want struct {
+	type insertWant struct {
 		id      int64
 		version int32
 	}
@@ -17,7 +17,7 @@ func TestMoviesInsert(t *testing.T) {
 	tests := []struct {
 		name string
 		give Movie
-		want want
+		want insertWant
 	}{
 		{
 			name: "Standard movie",
@@ -27,8 +27,8 @@ func TestMoviesInsert(t *testing.T) {
 				Runtime: 127,
 				Genres:  []string{"sci-fi", "action", "adventure"},
 			},
-			want: want{
-				id:      1,
+			want: insertWant{
+				id:      4,
 				version: 1,
 			},
 		},
@@ -40,8 +40,8 @@ func TestMoviesInsert(t *testing.T) {
 				Runtime: 93,
 				Genres:  []string{"sci-fi", "thriller", "drama"},
 			},
-			want: want{
-				id:      1,
+			want: insertWant{
+				id:      4,
 				version: 1,
 			},
 		},
@@ -65,8 +65,8 @@ func TestMoviesInsert(t *testing.T) {
 				Runtime: 111,
 				Genres:  []string{"sci-fi", "action", "anime"},
 			},
-			want: want{
-				id:      1,
+			want: insertWant{
+				id:      4,
 				version: 1,
 			},
 		},
@@ -93,4 +93,104 @@ func TestMoviesInsert(t *testing.T) {
 		})
 
 	}
+}
+
+func TestMoviesGet(t *testing.T) {
+	type getWant struct {
+		movie Movie
+		err   error
+	}
+	tests := []struct {
+		name string
+		give int64
+		want getWant
+	}{
+		{
+			name: "1 number ID",
+			give: 1,
+			want: getWant{
+				movie: Movie{
+					Title:   "Spider man",
+					Year:    2002,
+					Runtime: 102,
+					Genres:  []string{"sci-fi", "action", "adventure"},
+				},
+				err: nil,
+			},
+		},
+		{
+			name: "2 number ID",
+			give: 2,
+			want: getWant{
+				movie: Movie{
+					Title:   "Attack of the titans",
+					Year:    2013,
+					Runtime: 1,
+					Genres:  []string{"adventure", "action", "fantasy", "drama", "cartoon"},
+				},
+				err: nil,
+			},
+		},
+		{
+			name: "3 number ID",
+			give: 3,
+			want: getWant{
+				movie: Movie{
+					Title:   "Grimgar of the fantasy and ash",
+					Year:    2015,
+					Runtime: 1,
+					Genres:  []string{"anime", "adventure", "action", "fantasy", "cartoon"},
+				},
+				err: nil,
+			},
+		},
+		{
+			name: "0 number ID",
+			give: 0,
+			want: getWant{
+				movie: Movie{},
+				err:   ErrRecordNotFound,
+			},
+		},
+		{
+			name: "Non-existing ID",
+			give: 5,
+			want: getWant{
+				movie: Movie{},
+				err:   ErrRecordNotFound,
+			},
+		},
+		{
+			name: "Negative ID",
+			give: -5,
+			want: getWant{
+				movie: Movie{},
+				err:   ErrRecordNotFound,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := newTestDB(t)
+
+			m := MovieModel{db}
+
+			movie, err := m.Get(tt.give)
+			if movie != nil {
+				if !movie.Equal(tt.want.movie) {
+					t.Errorf("got: %+v; want %+v", movie, tt.want.movie)
+				}
+			}
+			if err != tt.want.err {
+				t.Errorf("got: %+v; want %+v", movie, tt.want.movie)
+			}
+
+		})
+
+	}
+}
+
+func TestMoviesUpdate(t *testing.T) {
+
 }
