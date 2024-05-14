@@ -7,7 +7,7 @@ import (
 )
 
 func newTestDB(t *testing.T) *sql.DB {
-	db, err := sql.Open("postgresql", "postgres://test_web:@localhost/greenlight_test?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://test_web:@localhost/greenlight_test?sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}
