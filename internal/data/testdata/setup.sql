@@ -18,7 +18,7 @@ INSERT INTO movies (title, year, runtime, genres) VALUES (
     'Spider man',
     2002,
     102,
-    {'sci-fi', 'action', 'adventure'}
+    '{"sci-fi", "action", "adventure"}'
 );
 
 INSERT INTO movies (title, year, runtime, genres) VALUES (
@@ -26,13 +26,13 @@ INSERT INTO movies (title, year, runtime, genres) VALUES (
     2013,
     1,
     -- should be added "anime" genre
-    {'adventure', 'action', 'fantasy', "drama", "cartoon"}
-)
+    '{"adventure", "action", "fantasy", "drama", "cartoon"}'
+);
 
 INSERT INTO movies (title, year, runtime, genres) VALUES (
     'Grimgar of the fantasy and ash',
     -- should be 2016 year
     2015,
     1,
-    {'anime', 'adventure', 'action', 'fantasy', "cartoon"}
-)
+    '{"anime", "adventure", "action", "fantasy", "cartoon"}'
+);
