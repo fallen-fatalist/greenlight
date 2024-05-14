@@ -192,5 +192,115 @@ func TestMoviesGet(t *testing.T) {
 }
 
 func TestMoviesUpdate(t *testing.T) {
+	tests := []struct {
+		name string
+		give Movie
+	}{
+		{
+			name: "First movie",
+			give: Movie{
+				ID:      1,
+				Title:   "Spider man",
+				Year:    2002,
+				Runtime: 102,
+				Genres:  []string{"sci-fi", "action", "adventure"},
+				Version: 1,
+			},
+		},
+		{
+			name: "Second movie",
+			give: Movie{
+				ID:      2,
+				Title:   "Attack of the titans",
+				Year:    2013,
+				Runtime: 1,
+				Genres:  []string{"adventure", "action", "fantasy", "drama", "cartoon"},
+				Version: 1,
+			},
+		},
+		{
+			name: "Third movie",
+			give: Movie{
+				ID:      3,
+				Title:   "Grimgar of the fantasy and ash",
+				Year:    2016,
+				Runtime: 1,
+				Genres:  []string{"anime", "adventure", "action", "fantasy", "cartoon"},
+				Version: 1,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := newTestDB(t)
+
+			m := MovieModel{db}
+
+			err := m.Update(&tt.give)
+			assert.NilError(t, err)
+
+			if tt.give.Version != 2 {
+				t.Errorf("Version of movie after update didn't changed.")
+			}
+
+		})
+
+	}
+
+}
+
+func TestMoviesDelete(t *testing.T) {
+	tests := []struct {
+		name string
+		give int64
+		want error
+	}{
+		{
+			name: "0 ID",
+			give: 0,
+			want: ErrRecordNotFound,
+		},
+		{
+			name: "Negative ID",
+			give: -1,
+			want: ErrRecordNotFound,
+		},
+		{
+			name: "First ID",
+			give: 1,
+			want: nil,
+		},
+		{
+			name: "Second ID",
+			give: 2,
+			want: nil,
+		},
+		{
+			name: "Third ID",
+			give: 3,
+			want: nil,
+		},
+		{
+			name: "Forth ID",
+			give: 4,
+			want: ErrRecordNotFound,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := newTestDB(t)
+
+			m := MovieModel{db}
+
+			err := m.Delete(tt.give)
+			if err != tt.want {
+				t.Errorf("got: %v; want %v", err, tt.want)
+			}
+
+		})
+
+	}
 
 }
